@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import postRepository, { CreatePost } from "../repositories/post-repository";
 
 async function getPosts() {
@@ -16,6 +17,14 @@ async function getPost(id: number) {
 }
 
 async function createPost(post: CreatePost) {
+
+  // verificando de a data veio preenchida
+  if (post.createAt === null) {
+    
+    // a data atual se post.createAt for nulo
+    const dataFormatada = format(new Date(), 'YYYY/MM/DD');
+    post.createAt = dataFormatada;
+  }
   return await postRepository.createPost(post);
 }
 
