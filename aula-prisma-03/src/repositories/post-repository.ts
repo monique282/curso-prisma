@@ -1,6 +1,5 @@
-import { date } from "joi";
+import { Post } from "@prisma/client";
 import db from "../database/database";
-import { Post } from "../protocols/post-protocol";
 
 const TABLE_NAME = "posts";
 
@@ -14,7 +13,7 @@ async function getPosts() {
   return result.rows;
 }
 
-async function getPost(id: number) { 
+async function getPost(id: number) {
   const result = await db.query<Post>(`
     SELECT * FROM ${TABLE_NAME} WHERE id = $1
   `, [id]);
@@ -23,11 +22,10 @@ async function getPost(id: number) {
 }
 
 async function createPost(post: CreatePost) {
-  const { username, title, body, createAt } = post;
-
+  const { username, title, body } = post;
   const result = await db.query<Post>(`
-    INSERT INTO ${TABLE_NAME} (username, title, body,"createAt" ) VALUES ($1, $2, $3, $4)
-  `, [username, title, body, createAt]);
+    INSERT INTO ${TABLE_NAME} (username, title, body) VALUES ($1, $2, $3)
+  `, [username, title, body]);
 
   return result.rowCount;
 }
